@@ -38,7 +38,7 @@ namespace Labb2Clean
 
         public void Persist(){
             List<User>? users = GetUsers();
-            
+
             if (users == null) {
                 users = new List<User>{ this };
             } else

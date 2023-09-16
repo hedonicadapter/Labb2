@@ -6,7 +6,11 @@ namespace Labb2Clean
     {
         static void Main(string[] args)
         {
-            Authorization.AuthFlow();            
+            // Don't think currentUser is /actually/ nullable but w/e
+            User? currentUser = Authorization.AuthFlow();
+            Cart? currentCart = Cart.GetCart(currentUser.Username);
+
+            
         }
 
         
