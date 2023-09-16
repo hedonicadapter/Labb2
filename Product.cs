@@ -31,14 +31,15 @@ namespace Labb2Clean
             File.WriteAllText(path, json);
         }
 
-        public static List<Product> GetProducts()
+        public static List<Product>? GetProducts()
         {
-            string persistedProductsPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory + "\\Assets\\products.json");
+            string persistedProductsPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory + "\\db\\products.json");
             string JSON = File.ReadAllText(persistedProductsPath);
+
+            if (string.IsNullOrWhiteSpace(JSON)) return null;
 
             var products = JsonSerializer.Deserialize<List<Product>>(JSON);
             
-            // I checked for null earlier and it's still complaining? 🤔
             return products;
         }
         public void IncrementQuantity()

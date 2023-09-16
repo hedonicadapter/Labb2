@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Labb2Clean
 {
-    internal class Authorization
+    internal static class Authorization
     {
         public static User? AuthFlow()
         {

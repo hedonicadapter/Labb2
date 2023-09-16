@@ -41,14 +41,14 @@ namespace Labb2Clean
             List<Cart>? carts = GetCarts();
             if (carts == null) return null;
 
-            return carts.FirstOrDefault(cart => cart.Owner == username);
+            return carts.FirstOrDefault(cart => string.Equals(cart.Owner, username, StringComparison.OrdinalIgnoreCase));
         }
         private static List<Cart>? GetCarts()
         {
-            string persistedCartsPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory + "\\Assets\\persistedCarts.json");
+            string persistedCartsPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory + "\\db\\carts.json");
             string JSON = File.ReadAllText(persistedCartsPath).Trim();
 
-            if (string.IsNullOrEmpty(JSON.Trim())) return null;
+            if (string.IsNullOrWhiteSpace(JSON.Trim())) return null;
 
             List<Cart> carts = JsonSerializer.Deserialize<List<Cart>>(JSON);
 
@@ -59,7 +59,8 @@ namespace Labb2Clean
 
         public void AddProduct(string productName)
         {
-            if (productName == null) throw new ArgumentNullException("No product name supplied.");
+            if (string.IsNullOrWhiteSpace(productName)) throw new ArgumentNullException("No product name supplied.");
+            productName = productName.Trim();
 
             foreach (Product product in Products)
             {
@@ -72,9 +73,15 @@ namespace Labb2Clean
                 }
             }
 
-            Product newItem = new Product(productName, 1);
-            Products.Add(newItem);
-            Total += newItem.Price;
+            List<Product>? productsWeSell = Product.GetProducts();
+            if (productsWeSell == null) throw new KeyNotFoundException("No products found. products.json might be corrupted.");
+
+            Product? newProduct = productsWeSell.FirstOrDefault(product=>string.Equals(product.Name.Trim(), productName, StringComparison.OrdinalIgnoreCase));
+            if (newProduct == null) throw new NullReferenceException("No product by that name in products.json.");
+            
+            newProduct.IncrementQuantity();
+            Products.Add(newProduct);
+            Total += newProduct.Price;
         }
     }
 }

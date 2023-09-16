@@ -16,3 +16,5 @@ F:\Coding\ITHSLabbar\Labb2Clean\obj\Debug\net7.0\Labb2Clean.pdb
 F:\Coding\ITHSLabbar\Labb2Clean\obj\Debug\net7.0\Labb2Clean.genruntimeconfig.cache
 F:\Coding\ITHSLabbar\Labb2Clean\obj\Debug\net7.0\ref\Labb2Clean.dll
 F:\Coding\ITHSLabbar\Labb2Clean\bin\Debug\net7.0\db\users.json
+F:\Coding\ITHSLabbar\Labb2Clean\bin\Debug\net7.0\db\carts.json
+F:\Coding\ITHSLabbar\Labb2Clean\bin\Debug\net7.0\db\products.json

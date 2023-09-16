@@ -6,11 +6,14 @@ namespace Labb2Clean
     {
         static void Main(string[] args)
         {
+            // Don't really need to run more than once but w/e
+            Product.CreateProducts();
+
             // Don't think currentUser is /actually/ nullable but w/e
             User? currentUser = Authorization.AuthFlow();
-            Cart? currentCart = Cart.GetCart(currentUser.Username);
+            Cart? currentCart = Cart.GetCart(currentUser.Username) ?? new Cart(currentUser.Username, currentUser.Password);
 
-            
+            Shopping.ShoppingLoop(currentCart);
         }
 
         

@@ -29,7 +29,7 @@ namespace Labb2Clean
             string persistedUsers = Path.Combine(AppDomain.CurrentDomain.BaseDirectory + "\\db\\users.json");
             string JSON = File.ReadAllText(persistedUsers).Trim();
 
-            if (string.IsNullOrEmpty(JSON.Trim())) return null;
+            if (string.IsNullOrWhiteSpace(JSON.Trim())) return null;
 
             List<User> users = JsonSerializer.Deserialize<List<User>>(JSON);
 
