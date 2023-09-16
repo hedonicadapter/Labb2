@@ -8,7 +8,7 @@ namespace Labb2Clean
 {
     public class Cart
     {
-        public string Owner { get; private set; }
+        public string Owner { get; private set; } // Primary key relation to user.Username
         public List<Product> Products { get; private set; }
         public double Total { get; private set; }
 

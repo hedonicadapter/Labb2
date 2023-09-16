@@ -8,39 +8,46 @@ using System.Threading.Tasks;
 
 namespace Labb2Clean
 {
+    // Enligt min kundundersökning sa kunderna att dessa funktioner
+    // är bättre som egen klass ist för metoder på User :3
     internal static class Authorization
     {
         public static User? AuthFlow()
         {
             string authOptionPicked = AuthOptions();
             Dictionary<string, string> credentials = new();
-            string? validationResult = null;
+            
 
             if (authOptionPicked == "Sign up") {
-                Console.WriteLine("Enter an ID.");
+                string? validationResult = "User exists.";
             
-                while ((validationResult = ValidateCredentials(credentials = GetUserCredentials())) == null){
+                while (validationResult.StartsWith("User exists")){
+                    credentials = GetUserCredentials();
+                    validationResult = ValidateCredentials(credentials);
+
                     Console.WriteLine(validationResult);
                 }
-
+                
                 User newUser = new User(credentials["username"], credentials["password"]);
                 newUser.Persist();
 
                 return newUser;
             } else if (authOptionPicked == "Sign in"){
-                Console.WriteLine("Enter your ID.");
+                string? validationResult = "Invalid credentials. Try again.";
 
-                while ((validationResult = ValidateCredentials(credentials = GetUserCredentials())) == null){
+
+                while (!validationResult.StartsWith("User exists")){
+                    credentials = GetUserCredentials();
+                    validationResult = ValidateCredentials(credentials);
                     Console.WriteLine(validationResult);
                 }
-
+                
                 return new User(credentials["username"], credentials["password"]);
             };
 
 
             return null;
         }
-
         public static string AuthOptions()
         {
             var authOptions = new SelectionPrompt<string>()
@@ -64,10 +71,15 @@ namespace Labb2Clean
             return credentials;
         }
 
-        public static string? ValidateCredentials(Dictionary<string, string>credentials){
+        public static string ValidateCredentials(Dictionary<string, string>credentials){
+            string invalidMsg = "Invalid credentials. Try again.";
+
             User? user = User.GetUser(credentials["username"], credentials["password"]);
+            if (user == null) {
+                return User.FindUser(credentials["username"]) ? invalidMsg : "Do you want to sign up? Then restart cause I'm not about to rewrite my core loop to give you the option.";
+            }
             
-            return user != null ? credentials["username"] : "Invalid credentials. Try again.";
+            return "User exists.";
         }
     }
 }
