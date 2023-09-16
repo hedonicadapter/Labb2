@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "dgSpecHash": "kC7rdjze/HtcoKdPHsBxhCCbF9uCfnOip+I1MHqpIyJ7RKKoeAHcp9VPXGcMPcPvO53bs8nekUsq4fvyOzlgQQ==",
+  "success": true,
+  "projectFilePath": "F:\\Coding\\ITHSLabbar\\Labb2Clean\\Labb2Clean.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\Sad Hentai\\.nuget\\packages\\spectre.console\\0.47.0\\spectre.console.0.47.0.nupkg.sha512",
+    "C:\\Users\\Sad Hentai\\.nuget\\packages\\system.memory\\4.5.5\\system.memory.4.5.5.nupkg.sha512"
+  ],
+  "logs": []
+}
