@@ -1,8 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text.Json;
-using System.Threading.Tasks;
 
 namespace Labb2Clean
 {
@@ -19,7 +15,7 @@ namespace Labb2Clean
 
         override public string ToString()
         {
-            Cart cart = Cart.GetCart(this.Username) ?? new Cart(this.Username, this.Password);
+            Cart cart = Cart.GetCart(this.Username) ?? new Cart(this.Username);
             string snyggString = $"{this.Username} {this.Password} {cart}";
 
             Console.WriteLine(snyggString);
@@ -71,12 +67,10 @@ namespace Labb2Clean
                 // Upsert
                 if (thisUserExists == -1)
                 {
-                    Console.WriteLine("this user doesnt exist " + thisUserExists);
                     users.Add(this);
                 }
                 else
                 {
-                    Console.WriteLine("this user exists " + thisUserExists);
                     users[thisUserExists] = this;
                 }
             }

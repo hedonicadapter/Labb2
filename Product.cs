@@ -1,8 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text.Json;
-using System.Threading.Tasks;
 
 namespace Labb2Clean
 {
@@ -26,7 +22,11 @@ namespace Labb2Clean
         //     products.Add(new Product("Soda", 0, 99));
         //     products.Add(new Product("Uranium", 0, 1));
 
-        //     string json = JsonSerializer.Serialize(products);
+        //     string json = JsonSerializer.Serialize(products, new JsonSerializerOptions
+        // {
+        //     PropertyNameCaseInsensitive = true,
+        //     IncludeFields = true
+        // });
         //     string path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory + "\\db\\products.json");
 
         //     File.WriteAllText(path, json);

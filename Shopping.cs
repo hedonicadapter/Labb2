@@ -1,15 +1,11 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using Spectre.Console;
 
 namespace Labb2Clean
 {
     public static class Shopping
     {
-        public static void ShoppingLoop(Cart cart)
+        public static bool ShoppingLoop(Cart cart)
         {
             string shoppingOptionPicked;
 
@@ -29,15 +25,19 @@ namespace Labb2Clean
                     case "Go to cart":
                         string cartOptionPicked = ShowCart(cart);
                         break;
+                    case "Sign out":
+                        return false;
+                    default: return false;
                 }
 
             }
+            return false;
         }
         public static string ShowShoppingPortal()
         {
             var shoppingOptions = new SelectionPrompt<string>()
                 .Title("Customer portal")
-                    .AddChoices(new[] { "Browse items", "Go to cart", "Go to checkout", "", "Exit" });
+                    .AddChoices(new[] { "Browse items", "Go to cart", "Go to checkout", "", "Sign out", "Exit" });
 
             return AnsiConsole.Prompt(shoppingOptions);
         }
