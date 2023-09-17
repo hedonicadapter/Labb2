@@ -18,19 +18,19 @@ namespace Labb2Clean
             Name = name;
             Quantity = quantity;
         }
+        // Init utility
+        // public static void CreateProducts()
+        // {
+        //     List<Product> products = new List<Product>();
+        //     products.Add(new Product("Borger", 0, 5));
+        //     products.Add(new Product("Soda", 0, 99));
+        //     products.Add(new Product("Uranium", 0, 1));
 
-        public static void CreateProducts()
-        {
-            List<Product> products = new List<Product>();
-            products.Add(new Product("Borger", 0, 5));
-            products.Add(new Product("Soda", 0, 99));
-            products.Add(new Product("Uranium", 0, 1));
+        //     string json = JsonSerializer.Serialize(products);
+        //     string path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory + "\\db\\products.json");
 
-            string json = JsonSerializer.Serialize(products);
-            string path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory + "\\db\\products.json");
-
-            File.WriteAllText(path, json);
-        }
+        //     File.WriteAllText(path, json);
+        // }
 
         public static List<Product>? GetProducts()
         {
