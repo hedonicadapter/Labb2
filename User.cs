@@ -8,15 +8,17 @@ namespace Labb2Clean
 {
     public class User
     {
-        public string Username {get; private set;}
-        public string Password {get; private set;} // Yes it's public. Mad?
+        public string Username { get; private set; }
+        public string Password { get; private set; } // Yes it's public. Mad?
 
-        public User(string username, string password){
+        public User(string username, string password)
+        {
             Username = username;
             Password = password;
         }
 
-        override public string ToString(){
+        override public string ToString()
+        {
             Cart cart = Cart.GetCart(this.Username) ?? new Cart(this.Username, this.Password);
             string snyggString = $"{this.Username} {this.Password} {cart}";
 
@@ -25,18 +27,20 @@ namespace Labb2Clean
         }
 
         // Exposed credentials aja baja moment
-        public static User? GetUser(string username, string password){
+        public static User? GetUser(string username, string password)
+        {
             List<User>? users = GetUsers();
             if (users == null) return null;
 
-            return users.FirstOrDefault(user=>user.Username == username && user.Password == password);
+            return users.FirstOrDefault(user => user.Username == username && user.Password == password);
         }
 
-        public static bool FindUser(string username){
+        public static bool FindUser(string username)
+        {
             List<User>? users = GetUsers();
             if (users == null) return false;
 
-            return users.FirstOrDefault(user=>user.Username == username) != null ? true : false;
+            return users.FirstOrDefault(user => user.Username == username) != null ? true : false;
         }
 
         static List<User>? GetUsers()
@@ -51,13 +55,16 @@ namespace Labb2Clean
             return users;
         }
 
-        public void Persist(){
+        public void Persist()
+        {
             List<User>? users = GetUsers();
 
-            if (users == null) {
+            if (users == null)
+            {
                 users = new List<User>();
                 users.Add(this);
-            } else
+            }
+            else
             {
                 var thisUserExists = users.FindIndex(user => user.Username == this.Username);
 
@@ -66,7 +73,8 @@ namespace Labb2Clean
                 {
                     Console.WriteLine("this user doesnt exist " + thisUserExists);
                     users.Add(this);
-                } else
+                }
+                else
                 {
                     Console.WriteLine("this user exists " + thisUserExists);
                     users[thisUserExists] = this;

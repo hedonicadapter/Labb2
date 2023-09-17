@@ -9,7 +9,8 @@ namespace Labb2Clean
 {
     public static class Shopping
     {
-        public static void ShoppingLoop(Cart cart){
+        public static void ShoppingLoop(Cart cart)
+        {
             string shoppingOptionPicked;
 
             while ((shoppingOptionPicked = ShowShoppingPortal()) != "Exit")
@@ -41,7 +42,8 @@ namespace Labb2Clean
             return AnsiConsole.Prompt(shoppingOptions);
         }
 
-        public static string ShowBrowseItems() {
+        public static string ShowBrowseItems()
+        {
             List<Product>? products = Product.GetProducts();
             // Should check for null but im not about to do error handling and allat
 
@@ -54,7 +56,7 @@ namespace Labb2Clean
 
             productAisle.AddChoice("Go back");
 
-            
+
             return AnsiConsole.Prompt(productAisle);
         }
 

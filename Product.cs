@@ -12,7 +12,8 @@ namespace Labb2Clean
         public int Quantity { get; private set; }
         public int Price { get; private set; }
 
-        public Product(string name, int quantity = 0, int price = 0) {
+        public Product(string name, int quantity = 0, int price = 0)
+        {
             Price = price;
             Name = name;
             Quantity = quantity;
@@ -39,16 +40,12 @@ namespace Labb2Clean
             if (string.IsNullOrWhiteSpace(JSON)) return null;
 
             var products = JsonSerializer.Deserialize<List<Product>>(JSON);
-            
+
             return products;
         }
         public void IncrementQuantity()
         {
             Quantity += 1;
-        }
-        public void DecrementQuantity()
-        {
-            Quantity -= 1;
         }
     }
 }
