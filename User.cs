@@ -1,16 +1,23 @@
 using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace Labb2Clean
 {
+    [JsonDerivedType(typeof(GoldUser), "Gold")]
+    [JsonDerivedType(typeof(SilverUser), "Silver")]
+    [JsonDerivedType(typeof(BronzeUser), "Bronze")]
     public class User
     {
         public string Username { get; private set; }
         public string Password { get; private set; } // Yes it's public. Mad?
+        public Cart Cart { get; set; }
 
-        public User(string username, string password)
+        public User(string username, string password, int discount = 0)
         {
             Username = username;
             Password = password;
+
+            Cart = Cart.GetCart(username) ?? new Cart(username, null, discount);
         }
 
         override public string ToString()
@@ -47,7 +54,10 @@ namespace Labb2Clean
             if (string.IsNullOrWhiteSpace(JSON.Trim())) return null;
 
             List<User> users = JsonSerializer.Deserialize<List<User>>(JSON);
-
+            foreach (User user in users)
+            {
+                Console.WriteLine(user.Username);
+            }
             return users;
         }
 
@@ -80,6 +90,30 @@ namespace Labb2Clean
             string path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory + "\\db\\users.json");
 
             File.WriteAllText(path, json);
+        }
+    }
+
+    public class GoldUser : User
+    {
+        static int Discount = 15;
+        public GoldUser(string username, string password) : base(username, password, Discount)
+        {
+        }
+    }
+
+    public class SilverUser : User
+    {
+        static int Discount = 10;
+        public SilverUser(string username, string password) : base(username, password, Discount)
+        {
+        }
+    }
+
+    public class BronzeUser : User
+    {
+        static int Discount = 5;
+        public BronzeUser(string username, string password) : base(username, password, Discount)
+        {
         }
     }
 }

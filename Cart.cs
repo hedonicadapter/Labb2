@@ -6,20 +6,51 @@ namespace Labb2Clean
     {
         public string Owner { get; private set; } // Primary key relation to user.Username
         public List<Product> Products { get; private set; }
-        public int Total { get; private set; }
+        public int Discount { get; set; }
+        private double _total = 0;
+        public double Total
+        {
+            get
+            {
+                return _total;
+            }
+            set
+            {
+                if (value == 0) { _total = 0; return; }
+                if (Discount > 0)
+                {
+                    double newTotal = _total + value;
+                    double discountPercentage = Discount * 0.01;
+                    double discountedAmount = newTotal * discountPercentage;
 
-        public Cart(string owner, List<Product>? products = null, int total = 0)
+                    _total = Math.Abs(newTotal - discountedAmount);
+                }
+                else
+                {
+                    _total += value;
+                }
+            }
+        }
+
+        public Cart(string owner, List<Product>? products = null, int discount = 0)
         {
             Owner = owner;
+            Discount = discount;
             Total = 0;
 
-            if (products != null)
+            if (products != null && products.Count > 0)
             {
+                Console.WriteLine("not null");
                 Products = products;
 
                 foreach (Product product in products)
                 {
-                    Total += product.Price;
+                    if (product.Quantity > 0)
+                    {
+                        Total = product.Price * product.Quantity;
+
+                    }
+                    else Total = product.Price;
                 }
 
             }
@@ -32,6 +63,7 @@ namespace Labb2Clean
 
             return carts.FirstOrDefault(cart => string.Equals(cart.Owner, owner, StringComparison.OrdinalIgnoreCase));
         }
+
         private static List<Cart>? GetCarts()
         {
             string persistedCartsPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory + "\\db\\carts.json");
@@ -44,6 +76,13 @@ namespace Labb2Clean
             return carts;
         }
 
+        public void Clear()
+        {
+            Products = new List<Product>();
+            Total = 0;
+            Persist();
+        }
+
         public void AddProduct(string productName)
         {
             if (string.IsNullOrWhiteSpace(productName)) throw new ArgumentNullException("No product name supplied.");
@@ -54,7 +93,7 @@ namespace Labb2Clean
                 if (product.Name == productName)
                 {
                     product.IncrementQuantity();
-                    Total += product.Price;
+                    Total = product.Price;
 
                     Persist();
                     return;
@@ -69,7 +108,7 @@ namespace Labb2Clean
 
             newProduct.IncrementQuantity();
             Products.Add(newProduct);
-            Total += newProduct.Price;
+            Total = newProduct.Price;
 
             Persist();
         }

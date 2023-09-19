@@ -26,15 +26,18 @@ namespace Labb2Clean
                 Console.WriteLine(validationResult);
             }
 
-            User newUser = new User(credentials["username"], credentials["password"]);
-            newUser.Persist();
+            if (credentials["username"] == "Robin" && credentials["password"] == "Kamo")
+            {
+                CurrentUser = new GoldUser("Robin", "Kamo");
+            }
+            else CurrentUser = new User(credentials["username"], credentials["password"]);
 
-            CurrentUser = newUser;
+            CurrentUser.Persist();
+
             return;
         }
         public void SignInFlow()
         {
-
             Dictionary<string, string> credentials = new();
             string? validationResult = "Invalid credentials. Try again.";
 
@@ -46,7 +49,11 @@ namespace Labb2Clean
                 Console.WriteLine(validationResult);
             }
 
-            CurrentUser = new User(credentials["username"], credentials["password"]);
+            if (credentials["username"] == "Robin" && credentials["password"] == "Kamo")
+            {
+                CurrentUser = new GoldUser("Robin", "Kamo");
+            }
+            else CurrentUser = new User(credentials["username"], credentials["password"]);
         }
         public void SignOut()
         {

@@ -9,7 +9,7 @@ namespace Labb2Clean
         {
             string shoppingOptionPicked;
 
-            while ((shoppingOptionPicked = ShowShoppingPortal()) != "Exit")
+            while ((shoppingOptionPicked = ShowShoppingPortal(cart)) != "Exit")
             {
                 switch (shoppingOptionPicked)
                 {
@@ -17,27 +17,41 @@ namespace Labb2Clean
                         string productPicked = "";
                         while ((productPicked = ShowBrowseItems()) != "Go back")
                         {
-                            string productWithoutPrice = Regex.Replace(productPicked, @"[\d\s-]+kr$", string.Empty);
-                            cart.AddProduct(productWithoutPrice);
+                            string productName = Regex.Replace(productPicked, @"[\d\s-]+kr$", string.Empty);
+                            cart.AddProduct(productName);
                         }
 
                         break;
                     case "Go to cart":
                         string cartOptionPicked = ShowCart(cart);
+                        if (cartOptionPicked == "Checkout")
+                        {
+                            cart.Clear();
+                            Console.WriteLine("Enjoy!");
+                        }
                         break;
                     case "Sign out":
                         return false;
+                    case "Checkout":
+                        cart.Clear();
+                        Console.WriteLine("Enjoy!");
+                        break;
                     default: return false;
                 }
 
             }
             return false;
         }
-        public static string ShowShoppingPortal()
+        public static string ShowShoppingPortal(Cart cart)
         {
+            string[] choices =
+                cart.Products.Count > 0 ?
+                    new[] { "Browse items", "Go to cart", "Checkout", "", "Sign out", "Exit" }
+                    : new[] { "Browse items", "Go to cart", "", "Sign out", "Exit" };
+
             var shoppingOptions = new SelectionPrompt<string>()
                 .Title("Customer portal")
-                    .AddChoices(new[] { "Browse items", "Go to cart", "Go to checkout", "", "Sign out", "Exit" });
+                    .AddChoices(choices);
 
             return AnsiConsole.Prompt(shoppingOptions);
         }
@@ -74,7 +88,7 @@ namespace Labb2Clean
             }
             Console.WriteLine($"Total: {cart.Total}kr");
 
-            cartOptions.AddChoice("Checkout");
+            if (cart.Products.Count > 0) cartOptions.AddChoice("Checkout");
             return AnsiConsole.Prompt(cartOptions);
         }
     }

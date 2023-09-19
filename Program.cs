@@ -16,12 +16,10 @@
                     else if (authOptionPicked == "Sign in") Auth.SignInFlow();
                 }
 
-                Cart? currentCart = Cart.GetCart(Auth.CurrentUser.Username) ?? new Cart(Auth.CurrentUser.Username);
-
                 Console.Clear();
 
                 // Returns false if user selects "Sign out" or "Exit"
-                if (Shopping.ShoppingLoop(currentCart) == false)
+                if (Shopping.ShoppingLoop(Auth.CurrentUser.Cart) == false)
                 {
                     Console.Clear();
                     Auth.SignOut();
