@@ -7,10 +7,10 @@ namespace Labb2Clean
     {
         public static bool ShoppingLoop(Cart cart)
         {
-            string shoppingOptionPicked;
-
-            while ((shoppingOptionPicked = ShowShoppingPortal(cart)) != "Exit")
+            while (true)
             {
+                string shoppingOptionPicked = ShowShoppingPortal(cart);
+
                 switch (shoppingOptionPicked)
                 {
                     case "Browse items":
@@ -30,17 +30,22 @@ namespace Labb2Clean
                             Console.WriteLine("Enjoy!");
                         }
                         break;
+
                     case "Sign out":
                         return false;
                     case "Checkout":
                         cart.Clear();
                         Console.WriteLine("Enjoy!");
+
                         break;
+                    case "Exit":
+                        Environment.Exit(0);
+
+                        break; // never called but ig it's consistent? c# js moment
                     default: return false;
                 }
 
             }
-            return false;
         }
         public static string ShowShoppingPortal(Cart cart)
         {

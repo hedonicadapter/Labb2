@@ -4,9 +4,9 @@ namespace Labb2Clean
 {
     public class Product
     {
-        public string Name { get; private set; }
+        public string Name { get; }
         public int Quantity { get; private set; }
-        public int Price { get; private set; }
+        public int Price { get; }
 
         public Product(string name, int quantity = 0, int price = 0)
         {
@@ -14,7 +14,7 @@ namespace Labb2Clean
             Name = name;
             Quantity = quantity;
         }
-        // Init utility
+        // Init utility. Use this to reset products.json.
         // public static void CreateProducts()
         // {
         //     List<Product> products = new List<Product>();

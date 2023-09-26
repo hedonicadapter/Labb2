@@ -2,16 +2,16 @@
 
 namespace Labb2Clean
 {
-    // Enligt min kundundersökning sa kunderna att dessa funktioner
-    // är bättre som egen klass ist för metoder på User :3
+    // Enligt min kundundersökning är dessa funktioner
+    // bättre som egen klass ist för metoder på User :3
     internal sealed class Authentication
     {
         // Singleton-syntaxen är plagiat, tar ingen cred, kan bara singletons i JS utan thread safety
         // -> https://csharpindepth.com/articles/singleton
-        private static readonly Lazy<Authentication> _Lazy = new Lazy<Authentication>(() => new Authentication());
+        private static readonly Lazy<Authentication> _lazy = new(() => new Authentication());
+        public static Authentication Instance { get { return _lazy.Value; } }
         public User? CurrentUser { get; private set; }
 
-        public static Authentication Instance { get { return _Lazy.Value; } }
 
         public void SignUpFlow()
         {
@@ -33,13 +33,11 @@ namespace Labb2Clean
             else CurrentUser = new User(credentials["username"], credentials["password"]);
 
             CurrentUser.Persist();
-
-            return;
         }
         public void SignInFlow()
         {
             Dictionary<string, string> credentials = new();
-            string? validationResult = "Invalid credentials. Try again.";
+            string? validationResult = "Invalid credentials. Try again."; // Default value
 
 
             while (!validationResult.StartsWith("User exists"))
@@ -63,7 +61,7 @@ namespace Labb2Clean
         {
             var authOptions = new SelectionPrompt<string>()
                 .Title("Membership")
-                    .AddChoices(new[] { "Sign up", "Sign in" });
+                    .AddChoices(new[] { "Sign up", "Sign in", "Exit" });
 
             return AnsiConsole.Prompt(authOptions);
         }

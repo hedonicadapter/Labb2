@@ -4,17 +4,29 @@ namespace Labb2Clean
 {
     public class Cart
     {
+        private double _total = 0;
+        private int _discount = 0;
+
         public string Owner { get; private set; } // Primary key relation to user.Username
         public List<Product> Products { get; private set; }
-        public int Discount { get; set; }
-        private double _total = 0;
+        public int Discount
+        {
+            get
+            {
+                return _discount;
+            }
+            protected set
+            {
+                _discount = value;
+            }
+        }
         public double Total
         {
             get
             {
                 return _total;
             }
-            set
+            private set
             {
                 if (value == 0) { _total = 0; return; }
                 if (Discount > 0)
@@ -40,7 +52,6 @@ namespace Labb2Clean
 
             if (products != null && products.Count > 0)
             {
-                Console.WriteLine("not null");
                 Products = products;
 
                 foreach (Product product in products)
@@ -101,7 +112,7 @@ namespace Labb2Clean
             }
 
             List<Product>? productsWeSell = Product.GetProducts();
-            if (productsWeSell == null) throw new KeyNotFoundException("No products found. products.json might be corrupted.");
+            if (productsWeSell == null) throw new KeyNotFoundException("No products found. ./bin/Debug/net7.0/db/products.json might be corrupted.");
 
             Product? newProduct = productsWeSell.FirstOrDefault(product => string.Equals(product.Name.Trim(), productName, StringComparison.OrdinalIgnoreCase));
             if (newProduct == null) throw new NullReferenceException("No product by that name in products.json.");

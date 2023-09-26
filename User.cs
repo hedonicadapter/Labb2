@@ -8,16 +8,56 @@ namespace Labb2Clean
     [JsonDerivedType(typeof(BronzeUser), "Bronze")]
     public class User
     {
-        public string Username { get; private set; }
-        public string Password { get; private set; } // Yes it's public. Mad?
-        public Cart Cart { get; set; }
+        private string _username;
+        private string _password;
+        private Cart _cart;
 
-        public User(string username, string password, int discount = 0)
+        public string Username
+        {
+            get
+            {
+                return _username;
+            }
+            private set
+            {
+                _username = value;
+            }
+        }
+        // Förstår att denna ska vara private, och att det räcker med en field,
+        // men JSON serializear inte private members. Det finns tre lösningar som 
+        // jag tror hamnar utanför the scope av uppgiften:
+        //  1. declare custom converter för serializern (mycket kod som är nytt för mig)
+        //  2. använd Newtonsoft.Json (har inte kollat hur man gör)
+        //  3. använd annan "databas"-form som .txt (orkar inte skriva om allt JSON-grejsimojs :3)
+        public string Password
+        {
+            get
+            {
+                return _password;
+            }
+            private set
+            {
+                _password = value;
+            }
+        }
+        public Cart Cart
+        {
+            get
+            {
+                return _cart;
+            }
+            set
+            {
+                _cart = value;
+            }
+        }
+
+        public User(string username, string password)
         {
             Username = username;
             Password = password;
 
-            Cart = Cart.GetCart(username) ?? new Cart(username, null, discount);
+            Cart = Cart.GetCart(username) ?? new Cart(username, null);
         }
 
         override public string ToString()
@@ -29,7 +69,6 @@ namespace Labb2Clean
             return snyggString;
         }
 
-        // Exposed credentials aja baja moment
         public static User? GetUser(string username, string password)
         {
             List<User>? users = GetUsers();
@@ -43,21 +82,18 @@ namespace Labb2Clean
             List<User>? users = GetUsers();
             if (users == null) return false;
 
-            return users.FirstOrDefault(user => user.Username == username) != null ? true : false;
+            return users.FirstOrDefault(user => user.Username == username) != null;
         }
 
         static List<User>? GetUsers()
         {
             string persistedUsers = Path.Combine(AppDomain.CurrentDomain.BaseDirectory + "\\db\\users.json");
-            string JSON = File.ReadAllText(persistedUsers).Trim();
+            string JSON = File.ReadAllText(persistedUsers);
 
-            if (string.IsNullOrWhiteSpace(JSON.Trim())) return null;
+            if (string.IsNullOrWhiteSpace(JSON)) return null;
 
             List<User> users = JsonSerializer.Deserialize<List<User>>(JSON);
-            foreach (User user in users)
-            {
-                Console.WriteLine(user.Username);
-            }
+
             return users;
         }
 
@@ -95,25 +131,49 @@ namespace Labb2Clean
 
     public class GoldUser : User
     {
-        static int Discount = 15;
-        public GoldUser(string username, string password) : base(username, password, Discount)
+        private static readonly int _discount = 15;
+        public int Discount
         {
+            get
+            {
+                return _discount;
+            }
+        }
+        public GoldUser(string username, string password) : base(username, password)
+        {
+            Cart = Cart.GetCart(username) ?? new Cart(username, null, Discount);
         }
     }
 
     public class SilverUser : User
     {
-        static int Discount = 10;
-        public SilverUser(string username, string password) : base(username, password, Discount)
+        private static int _discount = 10;
+        public int Discount
         {
+            get
+            {
+                return _discount;
+            }
+        }
+        public SilverUser(string username, string password) : base(username, password)
+        {
+            Cart = Cart.GetCart(username) ?? new Cart(username, null, Discount);
         }
     }
 
     public class BronzeUser : User
     {
-        static int Discount = 5;
-        public BronzeUser(string username, string password) : base(username, password, Discount)
+        private static int _discount = 5;
+        public int Discount
         {
+            get
+            {
+                return _discount;
+            }
+        }
+        public BronzeUser(string username, string password) : base(username, password)
+        {
+            Cart = Cart.GetCart(username) ?? new Cart(username, null, Discount);
         }
     }
 }
