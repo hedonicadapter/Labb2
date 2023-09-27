@@ -9,53 +9,113 @@ namespace Labb2Clean
         // Singleton-syntaxen är plagiat, tar ingen cred, kan bara singletons i JS utan thread safety
         // -> https://csharpindepth.com/articles/singleton
         private static readonly Lazy<Authentication> _lazy = new(() => new Authentication());
+        private static string _validationResult = "Invalid"; // default validation result
+        private static Dictionary<string, string> _credentials = new();
         public static Authentication Instance { get { return _lazy.Value; } }
         public User? CurrentUser { get; private set; }
 
+        public string ValidateSignIn(Dictionary<string, string> credentials)
+        {
+            string username = credentials["username"];
+            string password = credentials["password"];
+
+            User? user = User.GetUser(username);
+
+            if (user != null)
+            {
+                if (user.Password == password) return "Valid";
+                else if (user.Password != password) return "Valid username";
+            }
+            else return "Invalid";
+
+            return _validationResult;
+        }
+        public string ValidateSignUp(Dictionary<string, string> credentials)
+        {
+            string username = credentials["username"];
+
+            User? user = User.GetUser(username);
+
+            if (user != null)
+            {
+                return "Invalid";
+            }
+            else return "Valid";
+        }
 
         public void SignUpFlow()
         {
-            Dictionary<string, string> credentials = new();
-            string? validationResult = "User exists."; // Default value
-
-            while (validationResult.StartsWith("User exists"))
+            while (_validationResult == "Invalid")
             {
-                credentials = GetUserCredentials();
-                validationResult = ValidateCredentials(credentials);
+                _credentials = GetUserCredentials();
+                _validationResult = ValidateSignUp(_credentials);
 
-                Console.WriteLine(validationResult);
+                ShowCredentialFeedback();
             }
 
-            if (credentials["username"] == "Robin" && credentials["password"] == "Kamo")
+            if (_credentials["username"] == "Robin" && _credentials["password"] == "Kamo")
             {
                 CurrentUser = new GoldUser("Robin", "Kamo");
             }
-            else CurrentUser = new User(credentials["username"], credentials["password"]);
+            else CurrentUser = new User(_credentials["username"], _credentials["password"]);
 
             CurrentUser.Persist();
         }
         public void SignInFlow()
         {
-            Dictionary<string, string> credentials = new();
-            string? validationResult = "Invalid credentials. Try again."; // Default value
-
-
-            while (!validationResult.StartsWith("User exists"))
+            while (_validationResult == "Invalid" || _validationResult == "Valid username")
             {
-                credentials = GetUserCredentials();
-                validationResult = ValidateCredentials(credentials);
-                Console.WriteLine(validationResult);
+                _credentials = GetUserCredentials();
+                _validationResult = ValidateSignIn(_credentials);
+
+                if (_validationResult == "Invalid")
+                {
+                    var signUpPrompt = new SelectionPrompt<string>().Title("Do you want to sign up instead?")
+                    .AddChoices(new[] { "Yes", "No" });
+
+                    string reply = AnsiConsole.Prompt(signUpPrompt);
+
+                    if (reply == "Yes")
+                    {
+                        SignUpFlow();
+                        return;
+                    }
+                }
+
+                ShowCredentialFeedback();
             }
 
-            if (credentials["username"] == "Robin" && credentials["password"] == "Kamo")
+
+            if (_credentials["username"] == "Robin" && _credentials["password"] == "Kamo")
             {
                 CurrentUser = new GoldUser("Robin", "Kamo");
             }
-            else CurrentUser = new User(credentials["username"], credentials["password"]);
+            else CurrentUser = new User(_credentials["username"], _credentials["password"]);
+        }
+        public static void ShowCredentialFeedback()
+        {
+            switch (_validationResult)
+            {
+                default:
+                case "Invalid":
+                    Console.WriteLine("Invalid credentials. Try again.");
+
+                    break;
+                case "Valid username":
+                    Console.WriteLine("Invalid password. Try again.");
+
+                    break;
+                case "Valid":
+                    Console.WriteLine("Welcome.");
+
+                    break;
+            }
         }
         public void SignOut()
         {
             CurrentUser = null;
+            _validationResult = "Invalid";
+            _credentials = new();
         }
         public static string ShowAuthOptions()
         {
@@ -78,19 +138,6 @@ namespace Labb2Clean
             credentials.Add("password", password);
 
             return credentials;
-        }
-
-        public static string ValidateCredentials(Dictionary<string, string> credentials)
-        {
-            string invalidMsg = "Invalid credentials. Try again.";
-
-            User? user = User.GetUser(credentials["username"], credentials["password"]);
-            if (user == null)
-            {
-                return User.FindUser(credentials["username"]) ? invalidMsg : "Do you want to sign up? Then restart cause I'm not about to rewrite my core loop to give you the option.";
-            }
-
-            return "User exists.";
         }
     }
 }

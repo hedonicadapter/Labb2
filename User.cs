@@ -69,20 +69,19 @@ namespace Labb2Clean
             return snyggString;
         }
 
+        public static User? GetUser(string username)
+        {
+            List<User>? users = GetUsers();
+            if (users == null) return null;
+
+            return users.FirstOrDefault(user => user.Username == username);
+        }
         public static User? GetUser(string username, string password)
         {
             List<User>? users = GetUsers();
             if (users == null) return null;
 
             return users.FirstOrDefault(user => user.Username == username && user.Password == password);
-        }
-
-        public static bool FindUser(string username)
-        {
-            List<User>? users = GetUsers();
-            if (users == null) return false;
-
-            return users.FirstOrDefault(user => user.Username == username) != null;
         }
 
         static List<User>? GetUsers()
