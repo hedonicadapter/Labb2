@@ -41,8 +41,7 @@ namespace Labb2Clean
                     case "Exit":
                         Environment.Exit(0);
 
-                        break; // never called but ig it's consistent? c# js moment
-                    default: return false;
+                        break; // never called but ig it's consistent? c# moment
                 }
 
             }
@@ -64,7 +63,7 @@ namespace Labb2Clean
         public static string ShowBrowseItems()
         {
             List<Product>? products = Product.GetProducts();
-            // Should check for null but im not about to do error handling and allat
+            // Should check for null but im not about to do error handling and allat and it wont be null unless someone (Robin) tampers with the "backend"
 
             var productAisle = new SelectionPrompt<string>();
 

@@ -14,7 +14,7 @@ namespace Labb2Clean
         public static Authentication Instance { get { return _lazy.Value; } }
         public User? CurrentUser { get; private set; }
 
-        public string ValidateSignIn(Dictionary<string, string> credentials)
+        private string ValidateSignIn(Dictionary<string, string> credentials)
         {
             string username = credentials["username"];
             string password = credentials["password"];
@@ -30,7 +30,7 @@ namespace Labb2Clean
 
             return _validationResult;
         }
-        public string ValidateSignUp(Dictionary<string, string> credentials)
+        private string ValidateSignUp(Dictionary<string, string> credentials)
         {
             string username = credentials["username"];
 
@@ -53,13 +53,7 @@ namespace Labb2Clean
                 ShowCredentialFeedback();
             }
 
-            if (_credentials["username"] == "Robin" && _credentials["password"] == "Kamo")
-            {
-                CurrentUser = new GoldUser("Robin", "Kamo");
-            }
-            else CurrentUser = new User(_credentials["username"], _credentials["password"]);
-
-            CurrentUser.Persist();
+            SetCurrentUser(true);
         }
         public void SignInFlow()
         {
@@ -86,11 +80,7 @@ namespace Labb2Clean
             }
 
 
-            if (_credentials["username"] == "Robin" && _credentials["password"] == "Kamo")
-            {
-                CurrentUser = new GoldUser("Robin", "Kamo");
-            }
-            else CurrentUser = new User(_credentials["username"], _credentials["password"]);
+            SetCurrentUser();
         }
         public static void ShowCredentialFeedback()
         {
@@ -138,6 +128,37 @@ namespace Labb2Clean
             credentials.Add("password", password);
 
             return credentials;
+        }
+
+        // Kan vara en custom setter men det blir mer kod
+        private void SetCurrentUser(bool persist = false)
+        {
+            string username = _credentials["username"];
+            string password = _credentials["password"];
+
+            // Quick-fix syntaxen är coolare och mer koncist, men nytt för mig
+            switch ((username, password))
+            {
+                case ("Robin", "Kamo"):
+                    CurrentUser = new GoldUser(username, password);
+
+                    break;
+                case ("Sam", "Ba"):
+                    CurrentUser = new SilverUser(username, password);
+
+                    break;
+                case ("Yandere", "Dev"):
+                    CurrentUser = new BronzeUser(username, password);
+
+                    break;
+                default:
+                    CurrentUser = new User(username, password);
+
+                    break;
+            }
+
+            // persist = true om man signar up
+            if (persist) CurrentUser.Persist();
         }
     }
 }

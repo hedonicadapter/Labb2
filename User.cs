@@ -28,7 +28,7 @@ namespace Labb2Clean
         // jag tror hamnar utanför the scope av uppgiften:
         //  1. declare custom converter för serializern (mycket kod som är nytt för mig)
         //  2. använd Newtonsoft.Json (har inte kollat hur man gör)
-        //  3. använd annan "databas"-form som .txt (orkar inte skriva om allt JSON-grejsimojs :3)
+        //  3. använd annan "databas"-form som .txt (måste show off allt JSON-grejsimojs :3)
         public string Password
         {
             get
@@ -57,13 +57,13 @@ namespace Labb2Clean
             Username = username;
             Password = password;
 
-            Cart = Cart.GetCart(username) ?? new Cart(username, null);
+            Cart = Cart.GetCart(username) ?? new Cart(username);
         }
 
         override public string ToString()
         {
-            Cart cart = Cart.GetCart(this.Username) ?? new Cart(this.Username);
-            string snyggString = $"{this.Username} {this.Password} {cart}";
+            Cart cart = Cart.GetCart(Username) ?? new Cart(Username);
+            string snyggString = $"{Username} {Password} {cart}";
 
             Console.WriteLine(snyggString);
             return snyggString;
@@ -84,7 +84,7 @@ namespace Labb2Clean
             return users.FirstOrDefault(user => user.Username == username && user.Password == password);
         }
 
-        static List<User>? GetUsers()
+        private static List<User>? GetUsers()
         {
             string persistedUsers = Path.Combine(AppDomain.CurrentDomain.BaseDirectory + "\\db\\users.json");
             string JSON = File.ReadAllText(persistedUsers);
@@ -146,7 +146,7 @@ namespace Labb2Clean
 
     public class SilverUser : User
     {
-        private static int _discount = 10;
+        private static readonly int _discount = 10;
         public int Discount
         {
             get
@@ -162,7 +162,7 @@ namespace Labb2Clean
 
     public class BronzeUser : User
     {
-        private static int _discount = 5;
+        private static readonly int _discount = 5;
         public int Discount
         {
             get

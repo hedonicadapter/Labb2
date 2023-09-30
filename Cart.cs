@@ -15,7 +15,7 @@ namespace Labb2Clean
             {
                 return _discount;
             }
-            protected set
+            private set
             {
                 _discount = value;
             }
@@ -124,6 +124,7 @@ namespace Labb2Clean
             Persist();
         }
 
+        // Borde gjort en datalayer-klass för att hantera "backend", detta är basically samma kod som i User
         public void Persist()
         {
             List<Cart>? carts = GetCarts();
