@@ -1,0 +1,17 @@
+[
+  {
+    "Username": "Knatte",
+    "Password": "123",
+    "Cart": { "Owner": "Knatte", "Products": [], "Discount": 0, "Total": 0 }
+  },
+  {
+    "Username": "Fnatte",
+    "Password": "321",
+    "Cart": { "Owner": "Fnatte", "Products": [], "Discount": 0, "Total": 0 }
+  },
+  {
+    "Username": "Tjatte",
+    "Password": "213",
+    "Cart": { "Owner": "Tjatte", "Products": [], "Discount": 0, "Total": 0 }
+  }
+]
