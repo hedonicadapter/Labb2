@@ -1,4 +1,5 @@
 using System.Text.Json;
+using System.Text.RegularExpressions;
 
 namespace Labb2Clean
 {
@@ -97,7 +98,7 @@ namespace Labb2Clean
         public void AddProduct(string productName)
         {
             if (string.IsNullOrWhiteSpace(productName)) throw new ArgumentNullException("No product name supplied.");
-            productName = productName.Trim();
+            productName = Regex.Replace(productName.Trim(), "[^a-zA-Z]", "");
 
             foreach (Product product in Products)
             {
@@ -114,6 +115,7 @@ namespace Labb2Clean
             List<Product>? productsWeSell = Product.GetProducts();
             if (productsWeSell == null) throw new KeyNotFoundException("No products found. ./bin/Debug/net7.0/db/products.json might be corrupted.");
 
+            Console.WriteLine(productName);
             Product? newProduct = productsWeSell.FirstOrDefault(product => string.Equals(product.Name.Trim(), productName, StringComparison.OrdinalIgnoreCase));
             if (newProduct == null) throw new NullReferenceException("No product by that name in products.json.");
 
