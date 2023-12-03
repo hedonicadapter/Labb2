@@ -1,9 +1,11 @@
-using System.Text.Json;
+﻿using System.Text.Json;
+using Labb2Clean.DAL;
 
 namespace Labb2Clean
 {
-    public class Product
+    public class Product: IGenericMongoDoc
     {
+        public Guid Id { get; set; }
         public string Name { get; }
         public int Quantity { get; private set; }
         public int Price { get; }
@@ -14,23 +16,6 @@ namespace Labb2Clean
             Name = name;
             Quantity = quantity;
         }
-        // Init utility. Use this to reset products.json.
-        // public static void CreateProducts()
-        // {
-        //     List<Product> products = new List<Product>();
-        //     products.Add(new Product("Borger", 0, 5));
-        //     products.Add(new Product("Soda", 0, 99));
-        //     products.Add(new Product("Uranium", 0, 1));
-
-        //     string json = JsonSerializer.Serialize(products, new JsonSerializerOptions
-        // {
-        //     PropertyNameCaseInsensitive = true,
-        //     IncludeFields = true
-        // });
-        //     string path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory + "\\db\\products.json");
-
-        //     File.WriteAllText(path, json);
-        // }
 
         public static List<Product>? GetProducts()
         {

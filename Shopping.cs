@@ -1,13 +1,20 @@
 using System.Text.RegularExpressions;
+using Labb2Clean.DAL;
+using Labb2Clean.db;
+using Labb2Clean.Models;
 using Spectre.Console;
 
 namespace Labb2Clean
 {
     public static class Shopping
     {
-        private static string[] AllowedCurrencies = new string[] { "SEK", "CNY", "USD" };
-        public static string Currency { get; private set; } = "SEK";
-        public static bool ShoppingLoop(Cart cart)
+        private static readonly Mongo _db = new();
+        private static readonly CDAL _CDAL = new(_db);
+        private static readonly TDAL<Product> _PDAL = new(_db, "Products");
+        
+        private static readonly string[] AllowedCurrencies = { "SEK", "CNY", "USD" };
+        private static string Currency { get; set; } = "SEK";
+        public static async Task<bool> ShoppingLoop(Cart cart)
         {
             while (true)
             {
@@ -17,10 +24,11 @@ namespace Labb2Clean
                 {
                     case "Browse items":
                         string productPicked = "";
-                        while ((productPicked = ShowBrowseItems()) != "Go back")
+                        while ((productPicked = await ShowBrowseItems()) != "Go back")
                         {
                             string productName = Regex.Replace(productPicked, $@"[\d\s-]+{Currency}$", string.Empty);
-                            cart.AddProduct(productName);
+                            await cart.AddProduct(productName, _PDAL);
+                            _CDAL.Upsert(cart);
                         }
 
                         break;
@@ -29,12 +37,14 @@ namespace Labb2Clean
                         if (cartOptionPicked == "Checkout")
                         {
                             cart.Clear();
+                            _CDAL.Upsert(cart);
                             Console.WriteLine("Enjoy!");
                         }
                         break;
 
                     case "Checkout":
                         cart.Clear();
+                        _CDAL.Upsert(cart);
                         Console.WriteLine("Enjoy!");
 
                         break;
@@ -51,7 +61,7 @@ namespace Labb2Clean
 
             }
         }
-        public static string ShowShoppingPortal(Cart cart)
+        private static string ShowShoppingPortal(Cart cart)
         {
             string[] choices =
                 cart.Products.Count > 0 ?
@@ -65,9 +75,9 @@ namespace Labb2Clean
             return AnsiConsole.Prompt(shoppingOptions);
         }
 
-        public static string ShowBrowseItems()
+        private static async Task<string> ShowBrowseItems()
         {
-            List<Product>? products = Product.GetProducts();
+            List<Product>? products = await _PDAL.GetAll();
             // Should check for null but im not about to do error handling and allat and it wont be null unless someone (Robin) tampers with the "backend"
 
             var productAisle = new SelectionPrompt<string>();
@@ -84,7 +94,7 @@ namespace Labb2Clean
             return AnsiConsole.Prompt(productAisle);
         }
 
-        public static string ShowCart(Cart cart)
+        private static string ShowCart(Cart cart)
         {
             var cartOptions = new SelectionPrompt<string>()
                 .Title("Cart")
@@ -105,7 +115,7 @@ namespace Labb2Clean
             return AnsiConsole.Prompt(cartOptions);
         }
 
-        public static void CurrencyPicker()
+        private static void CurrencyPicker()
         {
             var shoppingOptions = new SelectionPrompt<string>()
                 .Title("Pick a currency")
@@ -115,7 +125,7 @@ namespace Labb2Clean
             if (AllowedCurrencies.Contains(selection)) Currency = selection;
         }
 
-        public static double SEKToCurrency(double price)
+        private static double SEKToCurrency(double price)
         {
             switch (Currency)
             {

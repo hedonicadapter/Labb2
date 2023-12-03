@@ -1,13 +1,17 @@
-using System.Text.Json;
+﻿using System.Text.Json;
 using System.Text.RegularExpressions;
+using Labb2Clean.DAL;
+using MongoDB.Bson.Serialization.Attributes;
 
-namespace Labb2Clean
+namespace Labb2Clean.Models
 {
-    public class Cart
+    public class Cart : IGenericMongoDoc
     {
         private double _total = 0;
         private int _discount = 0;
 
+        [BsonId]
+        public Guid Id { get; set; }
         public string Owner { get; private set; } // Primary key relation to user.Username
         public List<Product> Products { get; private set; }
         public int Discount
@@ -68,34 +72,14 @@ namespace Labb2Clean
             }
             else Products = new List<Product>();
         }
-        public static Cart? GetCart(string owner)
-        {
-            List<Cart>? carts = GetCarts();
-            if (carts == null) return null;
-
-            return carts.FirstOrDefault(cart => string.Equals(cart.Owner, owner, StringComparison.OrdinalIgnoreCase));
-        }
-
-        private static List<Cart>? GetCarts()
-        {
-            string persistedCartsPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory + "\\db\\carts.json");
-            string JSON = File.ReadAllText(persistedCartsPath).Trim();
-
-            if (string.IsNullOrWhiteSpace(JSON.Trim())) return null;
-
-            List<Cart> carts = JsonSerializer.Deserialize<List<Cart>>(JSON);
-
-            return carts;
-        }
 
         public void Clear()
         {
             Products = new List<Product>();
             Total = 0;
-            Persist();
         }
 
-        public void AddProduct(string productName)
+        public async Task AddProduct(string productName, TDAL<Product> _PDAL)
         {
             if (string.IsNullOrWhiteSpace(productName)) throw new ArgumentNullException("No product name supplied.");
             productName = Regex.Replace(productName.Trim(), "[^a-zA-Z]", "");
@@ -107,12 +91,11 @@ namespace Labb2Clean
                     product.IncrementQuantity();
                     Total = product.Price;
 
-                    Persist();
                     return;
                 }
             }
 
-            List<Product>? productsWeSell = Product.GetProducts();
+            List<Product>? productsWeSell = await _PDAL.GetAll();
             if (productsWeSell == null) throw new KeyNotFoundException("No products found. ./bin/Debug/net7.0/db/products.json might be corrupted.");
 
             Console.WriteLine(productName);
@@ -122,39 +105,11 @@ namespace Labb2Clean
             newProduct.IncrementQuantity();
             Products.Add(newProduct);
             Total = newProduct.Price;
-
-            Persist();
         }
 
-        // Borde gjort en datalayer-klass för att hantera "backend", detta är basically samma kod som i User
-        public void Persist()
+        public void ApplyDiscount(int discount)
         {
-            List<Cart>? carts = GetCarts();
-
-            if (carts == null)
-            {
-                carts = new List<Cart>();
-                carts.Add(this);
-            }
-            else
-            {
-                var thisCartExists = carts.FindIndex(cart => cart.Owner == this.Owner);
-
-                // Upsert
-                if (thisCartExists == -1)
-                {
-                    carts.Add(this);
-                }
-                else
-                {
-                    carts[thisCartExists] = this;
-                }
-            }
-
-            string json = JsonSerializer.Serialize(carts);
-            string path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory + "\\db\\carts.json");
-
-            File.WriteAllText(path, json);
+            Discount = discount;
         }
     }
 }

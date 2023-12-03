@@ -18,3 +18,17 @@ F:\Coding\ITHSLabbar\Labb2Clean\obj\Debug\net7.0\ref\Labb2Clean.dll
 F:\Coding\ITHSLabbar\Labb2Clean\bin\Debug\net7.0\db\users.json
 F:\Coding\ITHSLabbar\Labb2Clean\bin\Debug\net7.0\db\carts.json
 F:\Coding\ITHSLabbar\Labb2Clean\bin\Debug\net7.0\db\products.json
+F:\Coding\ITHSLabbar\Labb2Clean\bin\Debug\net7.0\AWSSDK.Core.dll
+F:\Coding\ITHSLabbar\Labb2Clean\bin\Debug\net7.0\AWSSDK.SecurityToken.dll
+F:\Coding\ITHSLabbar\Labb2Clean\bin\Debug\net7.0\DnsClient.dll
+F:\Coding\ITHSLabbar\Labb2Clean\bin\Debug\net7.0\Microsoft.Extensions.Logging.Abstractions.dll
+F:\Coding\ITHSLabbar\Labb2Clean\bin\Debug\net7.0\MongoDB.Bson.dll
+F:\Coding\ITHSLabbar\Labb2Clean\bin\Debug\net7.0\MongoDB.Driver.dll
+F:\Coding\ITHSLabbar\Labb2Clean\bin\Debug\net7.0\MongoDB.Driver.Core.dll
+F:\Coding\ITHSLabbar\Labb2Clean\bin\Debug\net7.0\MongoDB.Libmongocrypt.dll
+F:\Coding\ITHSLabbar\Labb2Clean\bin\Debug\net7.0\SharpCompress.dll
+F:\Coding\ITHSLabbar\Labb2Clean\bin\Debug\net7.0\Snappier.dll
+F:\Coding\ITHSLabbar\Labb2Clean\bin\Debug\net7.0\ZstdSharp.dll
+F:\Coding\ITHSLabbar\Labb2Clean\bin\Debug\net7.0\runtimes\linux\native\libmongocrypt.so
+F:\Coding\ITHSLabbar\Labb2Clean\bin\Debug\net7.0\runtimes\osx\native\libmongocrypt.dylib
+F:\Coding\ITHSLabbar\Labb2Clean\bin\Debug\net7.0\runtimes\win\native\mongocrypt.dll
