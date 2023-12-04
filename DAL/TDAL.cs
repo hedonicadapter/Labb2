@@ -32,4 +32,9 @@ public class TDAL<T> where T : IGenericMongoDoc
     {
         _collection.DeleteOne(doc => doc.Id == id);
     }
+
+    public void Insert(T obj)
+    {
+        _collection.InsertOne(obj);
+    }
 }

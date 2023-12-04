@@ -13,7 +13,7 @@ namespace Labb2Clean.Models
         [BsonId]
         public Guid Id { get; set; }
         public string Owner { get; private set; } // Primary key relation to user.Username
-        public List<Product> Products { get; private set; }
+        public List<Product> Products { get; set; }
         public int Discount
         {
             get

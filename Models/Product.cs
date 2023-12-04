@@ -1,14 +1,14 @@
 ﻿using System.Text.Json;
 using Labb2Clean.DAL;
 
-namespace Labb2Clean
+namespace Labb2Clean.Models
 {
     public class Product: IGenericMongoDoc
     {
         public Guid Id { get; set; }
-        public string Name { get; }
+        public string Name { get; set; }
         public int Quantity { get; private set; }
-        public int Price { get; }
+        public int Price { get; set; }
 
         public Product(string name, int quantity = 0, int price = 0)
         {
