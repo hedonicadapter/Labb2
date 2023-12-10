@@ -11,7 +11,9 @@ public class UDAL : TDAL<User>
     public async Task<User?> GetUserByCredentials(string username, string? password)
     {
         // Omit and encrypt passwords in real world situations && only select fields you need
-        return password == null ? await _collection.Find(doc => doc.Username == username).SingleOrDefaultAsync() : await _collection.Find(doc => doc.Username == username && doc.Password == password).SingleOrDefaultAsync();
+        return password == null ? 
+            await _collection.Find(doc => doc.Username == username).SingleOrDefaultAsync() 
+            : await _collection.Find(doc => doc.Username == username && doc.Password == password).SingleOrDefaultAsync();
     }
     
     public async Task<User?> GetUser(string username)

@@ -15,6 +15,7 @@ namespace Labb2Clean.Models
             Price = price;
             Name = name;
             Quantity = quantity;
+            Id = Guid.NewGuid();
         }
 
         public static List<Product>? GetProducts()

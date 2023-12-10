@@ -13,7 +13,7 @@ namespace Labb2Clean.Models
         private string _username;
         private string _password;
         private Cart _cart;
-        
+
         public Guid Id { get; set; }
         
         public string Username
@@ -61,6 +61,7 @@ namespace Labb2Clean.Models
             Username = username;
             Password = password;
             Cart = cart ?? new Cart(username);
+            Id = Guid.NewGuid();
         }
 
     }

@@ -54,6 +54,7 @@ namespace Labb2Clean.Models
             Owner = owner;
             Discount = discount;
             Total = 0;
+            Id = Guid.NewGuid();
 
             if (products != null && products.Count > 0)
             {

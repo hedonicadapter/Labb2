@@ -151,7 +151,7 @@ namespace Labb2Clean
         {
             string username = _credentials["username"];
             string password = _credentials["password"];
-            var cart = await _CDAL.GetCartByOwner(username);
+            var cart = await _CDAL.GetCartByOwner(username) ?? new Cart(username);
 
             // Quick-fix syntaxen är coolare och mer koncist, men nytt för mig
             switch ((username, password))
